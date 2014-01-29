@@ -16,7 +16,17 @@ var Contacts = (function() {
     navigation.go('view-contact-form', 'popup');
   };
 
+  // KTEC ADD START
+  // TODO Japanese Lang Value
+  const PHONETIC_LANG = 'jp-kanji';
+  //const PHONETIC_LANG = 'en-US';
+  // KTEC ADD END
+
   var contactTag,
+      // KTEC ADD START
+      phoneticGivenName,
+      phoneticFamilyName,
+      // KTEC ADD END
       settings,
       settingsButton,
       cancelButton,
@@ -784,6 +794,11 @@ var Contacts = (function() {
     }
     window.addEventListener('online', Contacts.onLineChanged);
     window.addEventListener('offline', Contacts.onLineChanged);
+    // KTEC ADD START
+    navigator.mozSettings.addObserver('language.current', function(value) {
+      renderPhoneticFunction();
+    });
+    // KTEC ADD END
 
     document.addEventListener('visibilitychange', function visibility(e) {
       if (ActivityHandler.currentlyHandling && document.hidden) {
@@ -799,6 +814,28 @@ var Contacts = (function() {
       }
     });
   };
+
+  // KTEC ADD START
+  var renderPhoneticFunction = function renderPhoneticFunction() {
+    if (document.documentElement.lang === navigator.mozL10n.language.code)
+      return;
+
+    if (isJapaneseLang()) {
+      contacts.Form.showPhoneticInputArea();
+      contacts.Details.showPhoneticArea();
+    } else {
+      contacts.Form.hidePhoneticInputArea();
+      contacts.Details.hidePhoneticArea();
+    }
+
+    //TODO　
+    //contactsList.initAlphaScroll();
+    //contactsList.load(null,true);
+
+    //TODO
+    document.documentElement.lang = navigator.mozL10n.language.code;
+  };
+  // KTEC ADD END
 
   window.addEventListener('localized', initContacts); // addEventListener
 
@@ -884,6 +921,12 @@ var Contacts = (function() {
     load('utilities', utility, callback);
   }
 
+  // KTEC ADD START
+  var isJapaneseLang = function c_isJapaneseLang() {
+    return navigator.mozL10n.language.code === PHONETIC_LANG;
+  };
+  // KTEC ADD END
+
   return {
     'goBack' : handleBack,
     'cancel': handleCancel,
@@ -911,6 +954,9 @@ var Contacts = (function() {
     'confirmDialog': loadConfirmDialog,
     'close': close,
     'view': loadView,
+    // KTEC ADD START
+    'isJapaneseLang': isJapaneseLang,
+    // KTEC ADD END
     'utility': loadUtility,
     get asyncScriptsLoaded() {
       return asyncScriptsLoaded;

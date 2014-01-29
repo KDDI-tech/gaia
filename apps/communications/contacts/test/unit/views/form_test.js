@@ -224,6 +224,22 @@ suite('Render contact form', function() {
       assert.equal(nameField.value, '');
     });
 
+    // KTEC ADD START
+    test('with no phonetic given name', function() {
+      mockContact.phoneticGivenName.pop();
+      subject.render(mockContact);
+      var nameField = document.querySelector('#phoneticGivenName');
+      assert.equal(nameField.value, '');
+    });
+
+    test('with no phonetic family name', function() {
+      mockContact.phoneticFamilyName.pop();
+      subject.render(mockContact);
+      var nameField = document.querySelector('#phoneticFamilyName');
+      assert.equal(nameField.value, '');
+    });
+    // KTEC ADD END
+
     test('with all fields', function() {
       // For this test we need a contact with the same number of items
       // on the used fields (phone, address, email, note)

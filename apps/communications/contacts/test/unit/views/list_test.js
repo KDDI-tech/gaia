@@ -21,6 +21,9 @@ requireApp('communications/contacts/test/unit/mock_utils.js');
 requireApp('communications/contacts/test/unit/mock_mozContacts.js');
 requireApp(
         'communications/contacts/test/unit/mock_performance_testing_helper.js');
+// KTEC ADD START
+requireApp('communications/contacts/test/unit/mock_contacts_list_cjk.js');
+// KTEC ADD END
 
 // We're going to swap those with mock objects
 // so we need to make sure they are defined.
@@ -1085,6 +1088,53 @@ suite('Render contacts list', function() {
       });
     });
 
+    // KTEC ADD START
+    test('check search(CJK)', function(done) {
+      mockContacts = new MockContactsListCJK();
+      var contactIndex = Math.floor(Math.random() * mockContacts.length);
+      var contact = mockContacts[contactIndex];
+
+      doLoad(subject, mockContacts, function() {
+        contacts.Search.init(mockContacts);
+        contacts.List.initSearch(function onInit() {
+          searchBox.value = contact.familyName[0];
+          contacts.Search.enterSearchMode({preventDefault: function() {}});
+          done();
+        });
+      });
+    });
+
+    test('check search(phoneticFamilyName)', function(done) {
+      mockContacts = new MockContactsListCJK();
+      var contactIndex = Math.floor(Math.random() * mockContacts.length);
+      var contact = mockContacts[contactIndex];
+
+      doLoad(subject, mockContacts, function() {
+        contacts.Search.init(mockContacts);
+        contacts.List.initSearch(function onInit() {
+          searchBox.value = contact.phoneticFamilyName[0];
+          contacts.Search.enterSearchMode({preventDefault: function() {}});
+          done();
+        });
+      });
+    });
+
+    test('check search(phoneticGivenName)', function(done) {
+      mockContacts = new MockContactsListCJK();
+      var contactIndex = Math.floor(Math.random() * mockContacts.length);
+      var contact = mockContacts[contactIndex];
+
+      doLoad(subject, mockContacts, function() {
+        contacts.Search.init(mockContacts);
+        contacts.List.initSearch(function onInit() {
+          searchBox.value = contact.phoneticGivenName[0];
+          contacts.Search.enterSearchMode({preventDefault: function() {}});
+          done();
+        });
+      });
+    });
+    // KTEC ADD END
+
     test('Search by name and surname with trailing whitespaces',
         function(done) {
       mockContacts = new MockContactsList();
@@ -1101,6 +1151,25 @@ suite('Render contacts list', function() {
         });
       });
     });
+
+    // KTEC ADD START
+    test('Search  by name and surname with trailing whitespaces(CJK)',
+        function(done) {
+      mockContacts = new MockContactsListCJK();
+      var contactIndex = Math.floor(Math.random() * mockContacts.length);
+      var contact = mockContacts[contactIndex];
+
+      doLoad(subject, mockContacts, function() {
+        searchBox.value = contact.familyName[0] + ' ' +
+                          contact.givenName[0] + '  ';
+        contacts.Search.search(function search_finished() {
+          assertContactFound(contact);
+          contacts.Search.invalidateCache();
+          done();
+        });
+      });
+    });
+    // KTEC ADD END
 
     test('Search non-alphabetical characters', function(done) {
       mockContacts = new MockContactsList();
@@ -1335,6 +1404,80 @@ suite('Render contacts list', function() {
       subject.setOrderByLastName(true);
       done();
     });
+
+    // KTEC ADD START
+    test('Order by lastname(CJK)', function(done) {
+      resetDom(document);
+      subject.init(list, true);
+
+      mockContacts = new MockContactsListCJK();
+
+      // Use refresh() to load list since it forces order strings to be
+      // calculated and used for sorting.
+      for (var i = 0; i < mockContacts.length; ++i) {
+        doRefreshContact(subject, mockContacts[i]);
+      }
+
+      var nodes = document.querySelectorAll('li[data-order]');
+
+      assert.length(nodes, mockContacts.length);
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        var mockContact = mockContacts[i];
+        var expected = getStringToBeOrdered(mockContact, true);
+
+        assert.equal(node.dataset['order'],
+          Normalizer.escapeHTML(expected, true));
+
+        var printed = node.querySelector('p');
+
+        // Check as well the correct highlight
+        // familyName to be in bold
+        var highlight =
+          '<strong>' +
+          Normalizer.escapeHTML(mockContact.familyName[0], true) +
+          '</strong> ' +
+          Normalizer.escapeHTML(mockContact.givenName[0], true);
+        assert.isTrue(printed.innerHTML.indexOf(highlight) == 0);
+      }
+      done();
+    });
+
+/*
+    test('NOT order by lastname(CJK)', function(done) {
+      subject.setOrderByLastName(false);
+
+      // Use refresh() to load list since it forces order strings to be
+      // calculated and used for sorting.
+      for (var i = 0; i < mockContacts.length; ++i) {
+        doRefreshContact(subject, mockContacts[i]);
+      }
+
+      // First one should be the last one from the list,
+      // with the current names
+      var node = document.querySelector('[data-order]');
+      var mockContact = mockContacts[mockContacts.length - 1];
+      var expected = getStringToBeOrdered(mockContact, false);
+
+      assert.equal(
+        node.dataset['order'], Normalizer.escapeHTML(expected, true));
+
+      var name = node.querySelector('p');
+
+      // Check highlight
+      // Given name to be in bold
+      var highlight =
+           Normalizer.escapeHTML(mockContact.familyName[0], true) +
+           ' <strong>' +
+           Normalizer.escapeHTML(mockContact.givenName[0], true) +
+           '</strong>';
+      assert.equal(name.innerHTML.indexOf(highlight), 0);
+
+      subject.setOrderByLastName(true);
+      done();
+    });
+*/    
+    // KTEC ADD END
   });
 
   suite('Select mode', function() {

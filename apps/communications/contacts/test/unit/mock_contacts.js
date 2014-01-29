@@ -65,5 +65,10 @@ var MockContacts = {
       'update': function() {}
     };
   },
+// KTEC ADD START
+  isJapaneseLang: function() {
+    return true;
+  },
+// KTEC ADD END
   showStatus: function(status) {}
 };

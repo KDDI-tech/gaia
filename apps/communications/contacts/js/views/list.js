@@ -539,7 +539,20 @@ contacts.List = (function() {
   var getSearchString = function getSearchString(contact, display) {
     var display = display || contact;
     var searchInfo = [];
-    var searchable = ['givenName', 'familyName'];
+    // KTEC ADD START
+    var searchable = [];
+    var familyName = (display.familyName && display.familyName[0]) || '';
+    var cjk = isCJK(String(familyName));
+    if (cjk) {
+      searchable.push('familyName');
+      searchable.push('givenName');
+      searchable.push('phoneticFamilyName');
+      searchable.push('phoneticGivenName');
+    } else {
+      searchable.push('givenName');
+      searchable.push('familyName');
+    }
+    // KTEC ADD END
     searchable.forEach(function(field) {
       var value = getStringValue(display, field);
       if (value) {
@@ -574,15 +587,62 @@ contacts.List = (function() {
       return fs;
     }
 
-    if (orderByLastName) {
+// KTEC ADD START
+    var cjk = isCJK(String(familyName));
+    if (orderByLastName && cjk) {
+      ele.appendChild(createStrongTag(familyName));
+      ele.appendChild(document.createTextNode(' ' + givenName));
+    } else if (orderByLastName && !cjk) {
       ele.appendChild(document.createTextNode(givenName + ' '));
       ele.appendChild(createStrongTag(familyName));
+    } else if (!orderByLastName && cjk) {
+      ele.appendChild(document.createTextNode(familyName + ' '));
+      ele.appendChild(createStrongTag(givenName));
     } else {
       ele.appendChild(createStrongTag(givenName));
       ele.appendChild(document.createTextNode(' ' + familyName));
     }
+// KTEC ADD END
     return ele;
   }
+
+// KTEC ADD START
+  function isCJK(name) {
+    if ((name === null) || (name === ''))
+      return false;
+
+    for (var i = 0; i < name.length; i++) {
+      if (!isKanji(name.charAt(i)) &&
+           !isKana(name.charAt(i)))
+        return false;
+    }
+
+    return true;
+  }
+
+  function isKanji(c) {
+    var unicode = c.charCodeAt(0);
+    if ((unicode >= 0x4e00 && unicode <= 0x9fcf) ||
+        (unicode >= 0x3400 && unicode <= 0x4dbf) ||
+        (unicode >= 0x20000 && unicode <= 0x2a6df) ||
+        (unicode >= 0xf900 && unicode <= 0xfadf) ||
+        (unicode >= 0x3190 && unicode <= 0x319f) ||
+        (unicode >= 0x2f800 && unicode <= 0x2fa1f))
+        return true;
+
+    return false;
+  }
+
+  function isKana(c) {
+    var unicode = c.charCodeAt(0);
+    if ((unicode >= 0x3040 && unicode <= 0x309f) ||
+         (unicode >= 0x30a0 && unicode <= 0x30ff) ||
+         (unicode >= 0xff61 && unicode <= 0xff9f))
+        return true;
+
+    return false;
+  }
+// KTEC ADD END
 
   function buildSocialMarks(category) {
     var marks = [];
@@ -1031,11 +1091,19 @@ contacts.List = (function() {
   var getAllContacts = function cl_getAllContacts(errorCb, successCb) {
     loading = true;
     initOrder(function onInitOrder() {
-      var sortBy = (orderByLastName === true ? 'familyName' : 'givenName');
+      // KTEC ADD START
+      var sortBy;
+      if (Contacts.isJapaneseLang()) {
+        sortBy = (orderByLastName === true ?
+          'phoneticFamilyName' : 'phoneticGivenName');
+      } else {
+        sortBy = (orderByLastName === true ? 'familyName' : 'givenName');
+      }
       var options = {
         sortBy: sortBy,
         sortOrder: 'ascending'
       };
+      // KTEC ADD END
 
       var cursor = navigator.mozContacts.getAll(options);
       var successCb = successCb || loadChunk;
@@ -1126,7 +1194,12 @@ contacts.List = (function() {
   // Fills the contact data to display if no givenName and familyName
   var getDisplayName = function getDisplayName(contact) {
     if (hasName(contact))
-      return { givenName: contact.givenName, familyName: contact.familyName };
+  // KTEC ADD START
+      return { givenName: contact.givenName,
+               familyName: contact.familyName,
+               phoneticGivenName: contact.phoneticGivenName,
+               phoneticFamilyName: contact.phoneticFamilyName};
+  // KTEC ADD END
 
     var givenName = [];
     if (contact.org && contact.org.length > 0) {
@@ -1832,6 +1905,9 @@ contacts.List = (function() {
     'hasPhoto' : hasPhoto,
     'renderFbData': renderFbData,
     'getHighlightedName': getHighlightedName,
+// KTEC ADD START
+    'isCJK': isCJK,
+// KTEC ADD END
     'selectFromList': selectFromList,
     'exitSelectMode': exitSelectMode,
     get chunkSize() {

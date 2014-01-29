@@ -10,6 +10,10 @@ contacts.Details = (function() {
       listContainer,
       star,
       detailsName,
+      // KTEC ADD START
+      phoneticNameTitle,
+      phoneticName,
+      // KTEC ADD END
       orgTitle,
       birthdayTemplate,
       phonesTemplate,
@@ -42,6 +46,10 @@ contacts.Details = (function() {
     contactDetails = dom.querySelector('#contact-detail');
     listContainer = dom.querySelector('#details-list');
     detailsName = dom.querySelector('#contact-name-title');
+    // KTEC ADD START
+    phoneticName = dom.querySelector('#phoneticName');
+    phoneticNameTitle = dom.querySelector('#phoneticname-title');
+    // KTEC ADD END
     orgTitle = dom.querySelector('#org-title');
     birthdayTemplate = dom.querySelector('#birthday-template-\\#i\\#');
     phonesTemplate = dom.querySelector('#phone-details-template-\\#i\\#');
@@ -189,6 +197,22 @@ contacts.Details = (function() {
     contactDetails.classList.remove('up');
     utils.dom.removeChildNodes(listContainer);
 
+    // KTEC ADD START
+    var givenName = (contact.givenName && contact.givenName[0]) || '';
+    var familyName = (contact.familyName && contact.familyName[0]) || '';
+    var cjk = contacts.List.isCJK(String(familyName));
+    if (cjk)
+        detailsName.textContent = familyName + ' ' + givenName;
+    else
+        detailsName.textContent = contact.name;
+
+    if (Contacts.isJapaneseLang()) {
+      renderPhoneticName(contact);
+    } else {
+      phoneticNameTitle.classList.add('hide');
+      phoneticName.classList.add('hide');
+    }
+    // KTEC ADD END
     renderFavorite(contact);
     renderOrg(contact);
     renderBday(contact);
@@ -207,6 +231,30 @@ contacts.Details = (function() {
 
     renderPhoto(contact);
   };
+
+  // KTEC ADD START
+  var renderPhoneticName = function cd_renderPhoneticName(contact) {
+    var phoneticNameText = '';
+
+    if (contact.phoneticFamilyName && contact.phoneticFamilyName.length > 0 &&
+        contact.phoneticFamilyName[0] != '') {
+      phoneticNameText = contact.phoneticFamilyName[0] + ' ';
+    }
+    if (contact.phoneticGivenName && contact.phoneticGivenName.length > 0 &&
+        contact.phoneticGivenName[0] != '') {
+      phoneticNameText += contact.phoneticGivenName[0];
+    }
+
+    if (phoneticNameText != '') {
+      phoneticName.textContent = phoneticNameText;
+      phoneticName.classList.remove('hide');
+      phoneticNameTitle.classList.remove('hide');
+    } else {
+      phoneticName.classList.add('hide');
+      phoneticNameTitle.classList.add('hide');
+    }
+  };
+  // KTEC ADD END
 
   var renderFavorite = function cd_renderFavorite(contact) {
     var favorite = isFavorite(contact);
@@ -615,11 +663,31 @@ contacts.Details = (function() {
     }
   };
 
+  // KTEC ADD START
+  var showPhoneticArea = function renderPhoneticInputArea() {
+    if (phoneticName && phoneticName.textContent != '') {
+      phoneticName.classList.remove('hide');
+      phoneticNameTitle.classList.remove('hide');
+    }
+  };
+
+  var hidePhoneticArea = function renderPhoneticInputArea() {
+    if (phoneticName) {
+      phoneticName.classList.add('hide');
+      phoneticNameTitle.classList.add('hide');
+    }
+  };
+  // KTEC ADD END
+
   return {
     'init': init,
     'setContact': setContact,
     'toggleFavorite': toggleFavorite,
     'render': render,
+    // KTEC ADD START
+    'showPhoneticArea': showPhoneticArea,
+    'hidePhoneticArea': hidePhoneticArea,
+    // KTEC ADD END
     'onLineChanged': checkOnline,
     'reMark': reMark
   };

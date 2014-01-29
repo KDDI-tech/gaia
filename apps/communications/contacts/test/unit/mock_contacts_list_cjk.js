@@ -1,6 +1,6 @@
 'use strict';
 
- function MockContactsList() {
+ function MockContactsListCJK() {
   return [
     {
       'id': '1',
@@ -8,34 +8,32 @@
       'additionalName': [''],
       'adr': [
         {
-          'countryName': 'Germany',
-          'locality': 'Chemnitz',
-          'postalCode': '09034',
-          'streetAddress': 'Gotthardstrasse 22'
+          'countryName': '日本',
+          'locality': '東京都',
+          'postalCode': '1310045',
+          'streetAddress': '墨田区押上1-1-2'
         }
       ],
       'bday': '1978-12-20',
       'email': [
         {
-          'type': 'Personal',
+          'type': '個人',
           'value': 'test@test.com'
         }
       ],
-      'familyName': ['AD'],
-      'givenName': ['Pepito'],
-      // KTEC ADD START
-      'phoneticFamilyName': [''],
-      'phoneticGivenName': [''],
-      // KTEC ADD END
+      'familyName': ['伊波'],
+      'givenName': ['勇'],
+　　 'phoneticFamilyName': ['いなみ'],
+  　　 'phoneticGivenName': ['ゆう'],
       'jobTitle': [''],
       'name': [
-        'Pepito A'
+        '勇 伊波'
       ],
       'org': ['Test'],
       'tel': [
         {
           'value': '+346578888881',
-          'type': 'Mobile',
+          'type': '携帯電話',
           'carrier': 'TEF'
         }
       ],
@@ -51,34 +49,32 @@
       'additionalName': [''],
       'adr': [
         {
-          'countryName': 'Germany',
-          'locality': 'Chemnitz',
-          'postalCode': '09034',
-          'streetAddress': 'Gotthardstrasse 22'
+          'countryName': '日本',
+          'locality': '熊本県',
+          'postalCode': '8600002',
+          'streetAddress': '熊本市中央区本丸1-1'
         }
       ],
       'bday': '1978-12-20',
       'email': [
         {
-          'type': 'Personal',
+          'type': '個人',
           'value': 'test@test.com'
         }
       ],
-      'familyName': ['BA'],
-      'givenName': ['Pepito'],
-      // KTEC ADD START
-      'phoneticFamilyName': [''],
-      'phoneticGivenName': [''],
-      // KTEC ADD END
+      'familyName': ['植田'],
+      'givenName': ['太郎'],
+　　 'phoneticFamilyName': ['うえだ'],
+  　　 'phoneticGivenName': ['たろう'],
       'jobTitle': [''],
       'name': [
-        'Pepito BA'
+        '太郎 植田'
       ],
       'org': ['Test'],
       'tel': [
         {
           'value': '+346578888882',
-          'type': 'Mobile',
+          'type': '携帯電話',
           'carrier': 'TEF'
         }
       ],
@@ -94,34 +90,32 @@
       'additionalName': [''],
       'adr': [
         {
-          'countryName': 'Germany',
-          'locality': 'Chemnitz',
-          'postalCode': '09034',
-          'streetAddress': 'Gotthardstrasse 22'
+          'countryName': '日本',
+          'locality': '大阪府',
+          'postalCode': '5400002',
+          'streetAddress': '大阪市中央区大阪城1-1'
         }
       ],
       'bday': '1978-12-20',
       'email': [
         {
-          'type': 'Personal',
+          'type': '個人',
           'value': 'test@test.com'
         }
       ],
-      'familyName': ['CC'],
-      'givenName': ['Antonio'],
-      // KTEC ADD START
-      'phoneticFamilyName': [''],
-      'phoneticGivenName': [''],
-      // KTEC ADD END
+      'familyName': ['相田'],
+      'givenName': ['士郎'],
+　　 'phoneticFamilyName': ['あいだ'],
+  　　 'phoneticGivenName': ['しろう'],
       'jobTitle': [''],
       'name': [
-        'Antonio CC'
+        '士郎 相田'
       ],
       'org': ['Test'],
       'tel': [
         {
           'value': '+346578888883',
-          'type': 'Mobile',
+          'type': '携帯電話',
           'carrier': 'TEF'
         }
       ],

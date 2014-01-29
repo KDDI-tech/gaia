@@ -1,6 +1,6 @@
 'use strict';
 
-function MockContactAllFields(withoutPhoto) {
+function MockContactAllFieldsCJK(withoutPhoto) {
   var photo;
   if (!withoutPhoto) {
     photo = getPhotoBlob();
@@ -8,52 +8,52 @@ function MockContactAllFields(withoutPhoto) {
   return {
     'id': '1',
     'updated': new Date(),
-    'additionalName': ['Green'],
+    'additionalName': [''],
     'adr': [
       {
-        'type': ['home'],
+        'type': ['自宅'],
         'pref': true,
-        'countryName': 'Germany',
-        'locality': 'Chemnitz',
-        'region': 'Chemnitz',
-        'postalCode': '09034',
-        'streetAddress': 'Gotthardstrasse 22'
+        'countryName': '日本',
+        'locality': '東京',
+        'region': '東京',
+        'postalCode': '1310045',
+        'streetAddress': '墨田区押上1-1-2'
       }
     ],
     'bday': new Date(0),
     'email': [
       {
-        'type': ['personal'],
+        'type': ['個人'],
         'value': 'test@test.com'
       },
       {
-        'type': ['work'],
+        'type': ['仕事'],
         'value': 'test@work.com',
         'pref': true
       }
     ],
     'honorificPrefix': ['Mr.'],
-    'familyName': ['Grillo'],
-    'givenName': ['Pepito'],
+    'familyName': ['山田'],
+    'givenName': ['太郎'],
     // KTEC ADD START
-    'phoneticFamilyName': [''],
-    'phoneticGivenName': [''],
+    'phoneticFamilyName': ['やまだ'],
+    'phoneticGivenName': ['たろう'],
     // KTEC ADD END
-    'nickname': ['PG'],
-    'jobTitle': ['Sr. Software Architect'],
-    'name': ['Pepito Grillo'],
+    'nickname': ['やま'],
+    'jobTitle': ['プログラマー'],
+    'name': ['太郎 山田'],
     'org': ['Test ORG'],
     'tel': [
       {
         'value': '+346578888888',
-        'type': ['Mobile'],
-        'carrier': 'TEF',
+        'type': ['携帯電話'],
+        'carrier': 'KDDI',
         'pref': true
       },
       {
         'value': '+3120777777',
-        'type': ['Home'],
-        'carrier': 'KPN'
+        'type': ['自宅'],
+        'carrier': 'MOZ'
       }
     ],
     'url' : [

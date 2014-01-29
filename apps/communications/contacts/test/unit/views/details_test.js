@@ -13,6 +13,10 @@ requireApp('communications/contacts/test/unit/mock_contacts.js');
 requireApp('communications/contacts/test/unit/mock_contacts_list_obj.js');
 requireApp('communications/contacts/test/unit/mock_fb.js');
 requireApp('communications/contacts/test/unit/mock_extfb.js');
+// KTEC ADD START
+requireApp('communications/contacts/js/views/list.js');
+requireApp('communications/contacts/test/unit/mock_contact_all_fields_cjk.js');
+// KTEC ADD END
 
 var subject,
     container,
@@ -42,11 +46,40 @@ var subject,
     realFb,
     mozL10n,
     mockContact,
+    // KTEC ADD START
+    phoneticNameTitle,
+    phoneticName,
+    mockContact_cjk,
+    // KTEC ADD END
     fbButtons,
     linkButtons,
     realContactsList;
 
 var SCALE_RATIO = 1;
+
+// KTEC ADD START
+function renderPhoneticName(contact) {
+  var phoneticNameText = '';
+
+  if (contact.phoneticFamilyName && contact.phoneticFamilyName.length > 0 &&
+      contact.phoneticFamilyName[0] != '') {
+    phoneticNameText = contact.phoneticFamilyName[0] + ' ';
+  }
+  if (contact.phoneticGivenName && contact.phoneticGivenName.length > 0 &&
+      contact.phoneticGivenName[0] != '') {
+    phoneticNameText += contact.phoneticGivenName[0];
+  }
+
+  if (phoneticNameText != '') {
+    phoneticName.textContent = phoneticNameText;
+    phoneticName.classList.remove('hide');
+    phoneticNameTitle.classList.remove('hide');
+  } else {
+    phoneticName.classList.add('hide');
+    phoneticNameTitle.classList.add('hide');
+  }
+}
+// KTEC ADD END
 
 suite('Render contact', function() {
 
@@ -105,6 +138,10 @@ suite('Render contact', function() {
     cover = dom.querySelector('#cover-img');
     detailsInner = dom.querySelector('#contact-detail-inner');
     favoriteMessage = dom.querySelector('#toggle-favorite').children[0];
+    // KTEC ADD START
+    phoneticName = dom.querySelector('#phoneticName');
+    phoneticNameTitle = dom.querySelector('#phoneticname-title');
+    // KTEC ADD END
 
     fbButtons = [
       '#profile_button',
@@ -129,6 +166,9 @@ suite('Render contact', function() {
 
   setup(function() {
     mockContact = new MockContactAllFields(true);
+    // KTEC ADD START
+    mockContact_cjk = new MockContactAllFieldsCJK(true);
+    // KTEC ADD END
     subject.setContact(mockContact);
     TAG_OPTIONS = Contacts.getTags();
     window.set;
@@ -151,7 +191,62 @@ suite('Render contact', function() {
       subject.render(null, TAG_OPTIONS);
       assert.equal(detailsName.textContent, '');
     });
+
+    // KTEC ADD START
+    test('with name(CJK)', function() {
+      subject.setContact(mockContact_cjk);
+      subject.render(null, TAG_OPTIONS);
+      assert.equal(detailsName.textContent, mockContact_cjk.name[0]);
+    });
+
+    test('without name(CJK)', function() {
+      var contactWoName = new MockContactAllFieldsCJK(true);
+      contactWoName.name = null;
+      subject.setContact(contactWoName);
+      subject.render(null, TAG_OPTIONS);
+      assert.equal(detailsName.textContent, '');
+    });
+
+    test('Indication of the name by the CJK letter', function() {
+      subject.setContact(mockContact_cjk);
+      subject.render(null, TAG_OPTIONS);
+      var displayName = mockContact_cjk.familyName + ' ' +
+        mockContact_cjk.givenName;
+      var cjk = realContactsList.isCJK(String(mockContact_cjk.familyName));
+      if (cjk)
+          detailsName.textContent = mockContact_cjk.familyName + ' ' +
+            mockContact_cjk.givenName;
+      else
+          detailsName.textContent = mockContact_cjk.name;
+      assert.equal(detailsName.textContent, displayName);
+    });
+    // KTEC ADD END
   });
+
+  // KTEC ADD START
+  suite('Render phonetic name', function() {
+    test('with phonetic name', function() {
+      phoneticName.textContent = null;
+      subject.setContact(mockContact_cjk);
+      subject.render(null, TAG_OPTIONS);
+      var phonetic = mockContact_cjk.phoneticFamilyName + ' ' +
+        mockContact_cjk.phoneticGivenName;
+      if (Contacts.isJapaneseLang())
+        renderPhoneticName(mockContact_cjk);
+      assert.equal(phoneticName.textContent, phonetic);
+    });
+
+    test('without phonetic name', function() {
+      var contactWoPhonetic = new MockContactAllFieldsCJK(true);
+      contactWoPhonetic.phoneticFamilyName = null;
+      contactWoPhonetic.phoneticGivenName = null;
+      phoneticName.textContent = null;
+      subject.setContact(contactWoPhonetic);
+      subject.render(null, TAG_OPTIONS);
+      assert.equal(phoneticName.textContent, '');
+    });
+  });
+  // KTEC ADD END
 
   suite('Render favorite', function() {
     test('with favorite contact', function() {

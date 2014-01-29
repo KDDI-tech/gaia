@@ -11,5 +11,8 @@ var MockContactsListObj = {
     remove: function() {},
     loaded: true,
     clearClickHandlers: function() {},
+// KTEC ADD START
+    isCJK: function() {},
+// KTEC ADD END
     setOrderByLastName: function() {}
 };

@@ -23,6 +23,10 @@ contacts.Form = (function() {
       givenName,
       company,
       familyName,
+      // KTEC ADD START
+      phoneticGivenName,
+      phoneticFamilyName,
+      // KTEC ADD END
       configs,
       _,
       formView,
@@ -89,6 +93,16 @@ contacts.Form = (function() {
     familyName = dom.getElementById('familyName');
     formView = dom.getElementById('view-contact-form');
     throbber = dom.getElementById('throbber');
+    // KTEC ADD START
+    phoneticGivenName = dom.getElementById('phoneticGivenName');
+    phoneticFamilyName = dom.getElementById('phoneticFamilyName');
+
+    if (Contacts.isJapaneseLang()) {
+      showPhoneticInputArea();
+    } else {
+      hidePhoneticInputArea();
+    }
+    // KTEC ADD END
     var phonesContainer = dom.getElementById('contacts-form-phones');
     var emailContainer = dom.getElementById('contacts-form-emails');
     var addressContainer = dom.getElementById('contacts-form-addresses');
@@ -227,6 +241,10 @@ contacts.Form = (function() {
                        contact.familyName.length > 0) ?
                        contact.familyName[0] : '';
     company.value = contact.org && contact.org.length > 0 ? contact.org[0] : '';
+    // KTEC ADD START
+    phoneticGivenName.value = contact.phoneticGivenName || '';
+    phoneticFamilyName.value = contact.phoneticFamilyName || '';
+    // KTEC ADD END
 
     if (nonEditableValues[company.value]) {
       var nodeClass = company.parentNode.classList;
@@ -295,6 +313,10 @@ contacts.Form = (function() {
     givenName.value = params.givenName || '';
     familyName.value = params.lastName || '';
     company.value = params.company || '';
+    // KTEC ADD START
+    phoneticGivenName.value = params.phoneticGivenName || '';
+    phoneticFamilyName.value = params.phoneticLastName || '';
+    // KTEC ADD END
 
     var toRender = ['tel', 'email', 'adr', 'note'];
     for (var i = 0; i < toRender.length; i++) {
@@ -500,6 +522,10 @@ contacts.Form = (function() {
     var inputs = {
       'givenName': givenName,
       'familyName': familyName,
+      // KTEC ADD START
+      'phoneticGivenName': phoneticGivenName,
+      'phoneticFamilyName': phoneticFamilyName,
+      // KTEC ADD END
       'org': company
     };
 
@@ -931,6 +957,10 @@ contacts.Form = (function() {
     currentContact = {};
     givenName.value = '';
     familyName.value = '';
+    // KTEC ADD START
+    phoneticGivenName.value = '';
+    phoneticFamilyName.value = '';
+    // KTEC ADD END
     company.value = '';
     thumb.style.backgroundImage = '';
     var phones = dom.querySelector('#contacts-form-phones');
@@ -1082,11 +1112,35 @@ contacts.Form = (function() {
     };
   }
 
+  // KTEC ADD START
+  var showPhoneticInputArea = function renderPhoneticInputArea() {
+      if (phoneticGivenName) {
+        phoneticGivenName.classList.remove('hide');
+      }
+      if (phoneticFamilyName) {
+        phoneticFamilyName.classList.remove('hide');
+      }
+  };
+
+  var hidePhoneticInputArea = function renderPhoneticInputArea() {
+      if (phoneticGivenName) {
+        phoneticGivenName.classList.add('hide');
+      }
+      if (phoneticFamilyName) {
+        phoneticFamilyName.classList.add('hide');
+      }
+  };
+  // KTEC ADD END
+
   return {
     'init': init,
     'render': render,
     'insertField': insertField,
     'saveContact': saveContact,
+    // KTEC ADD START
+    'showPhoneticInputArea': showPhoneticInputArea,
+    'hidePhoneticInputArea': hidePhoneticInputArea,
+    // KTEC ADD END
     'onNewFieldClicked': onNewFieldClicked,
     'pickImage': pickImage
   };
