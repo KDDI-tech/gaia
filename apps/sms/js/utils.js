@@ -255,12 +255,14 @@
         return false;
       }
 
-      if (service && service.normalize) {
-        a = service.normalize(a);
-        b = service.normalize(b);
-      } else {
-        a = Utils.removeNonDialables(a);
-        b = Utils.removeNonDialables(b);
+      if(a.indexOf('@') == -1 || b.indexOf('@') == -1) {
+        if (service && service.normalize) {
+          a = service.normalize(a);
+          b = service.normalize(b);
+        } else {
+          a = Utils.removeNonDialables(a);
+          b = Utils.removeNonDialables(b);
+        }
       }
 
       return a === b || a.slice(-7) === b.slice(-7);
@@ -496,11 +498,13 @@
       var data = {
         name: title,
         number: number,
+        email: number,
         type: type,
         carrier: carrier,
         separator: separator,
         nameHTML: '',
-        numberHTML: ''
+        numberHTML: '',
+        emailHTML: ''
       };
 
       return data;

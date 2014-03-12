@@ -59,7 +59,7 @@ var ActivityHandler = {
       var number = activity.source.data.number;
       var body = activity.source.data.body;
 
-      Contacts.findByPhoneNumber(number, function findContact(results) {
+      Contacts.findByAddress(number, function findContact(results) {
         var record, details, name, contact;
 
         // Bug 867948: results null is a legitimate case
@@ -434,7 +434,7 @@ var ActivityHandler = {
           }
         }
 
-        Contacts.findByPhoneNumber(message.sender, function gotContact(
+        Contacts.findByAddress(message.sender, function gotContact(
                                                                 contact) {
           var sender = message.sender;
           if (!contact) {

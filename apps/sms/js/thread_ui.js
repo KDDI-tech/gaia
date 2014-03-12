@@ -753,7 +753,7 @@ var ThreadUI = global.ThreadUI = {
   },
 
   showNewMessageNotice: function thui_showNewMessageNotice(message) {
-    Contacts.findByPhoneNumber(message.sender, (function gotContact(contact) {
+    Contacts.findByAddress(message.sender, (function gotContact(contact) {
       var sender = message.sender;
       if (contact && contact.length) {
         var details = Utils.getContactDetails(sender, contact[0]);
@@ -1233,15 +1233,21 @@ var ThreadUI = global.ThreadUI = {
     var wasCarrierTagShown = threadMessages.classList.contains('has-carrier');
     var isCarrierTagShown = false;
     var carrierText;
+    var address;
 
     // The carrier banner is meaningless and confusing in
     // group message mode.
     if (thread.participants.length === 1 &&
         (contacts && contacts.length)) {
 
+      if (number.indexOf('@') > -1) {
+        address = contacts[0].email;
+      } else {
+        address = contacts[0].tel;
+      }
 
       carrierText = Utils.getCarrierTag(
-        number, contacts[0].tel, details
+        number, address, details
       );
 
       // Known Contact with at least:
@@ -1311,7 +1317,7 @@ var ThreadUI = global.ThreadUI = {
     //
     //    Jane Doe (+2)
     //
-    Contacts.findByPhoneNumber(number, function gotContact(contacts) {
+    Contacts.findByAddress(number, function gotContact(contacts) {
       var details = Utils.getContactDetails(number, contacts);
       // Bug 867948: contacts null is a legitimate case, and
       // getContactDetails is okay with that.
@@ -2500,6 +2506,12 @@ var ThreadUI = global.ThreadUI = {
     }
 
     var number = this.headerText.dataset.number;
+    var tel, email;
+    if (number.indexOf('@') > -1) {
+      email = number;
+    } else {
+      tel = number;
+    }
 
     if (this.headerText.dataset.isContact === 'true') {
       this.promptContact({
@@ -2507,7 +2519,8 @@ var ThreadUI = global.ThreadUI = {
       });
     } else {
       this.prompt({
-        number: number,
+        number: tel,
+        email: email,
         isContact: false
       });
     }
@@ -2517,12 +2530,13 @@ var ThreadUI = global.ThreadUI = {
     opts = opts || {};
 
     var inMessage = opts.inMessage || false;
-    var number = opts.number || '';
+    var number = opts.number || opts.email || '';
 
-    Contacts.findByPhoneNumber(number, function(results) {
+    Contacts.findByAddress(number, function(results) {
       var isContact = results && results.length;
       var contact = results[0];
       var id;
+      var tel, email;
 
       var fragment;
 
@@ -2538,8 +2552,15 @@ var ThreadUI = global.ThreadUI = {
         });
       }
 
+      if (number.indexOf('@') > -1) {
+        email = number;
+      } else {
+        tel = number;
+      }
+
       this.prompt({
-        number: number,
+        number: tel,
+        email: email,
         header: fragment || number,
         contactId: id,
         isContact: isContact,

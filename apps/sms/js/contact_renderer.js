@@ -165,7 +165,7 @@ ContactRenderer.prototype = {
 
     // don't render if there is no phone number
     // TODO: Add email checking support for MMS
-    if (!contact.tel || !contact.tel.length) {
+    if ((!contact.tel || !contact.tel.length) && (!contact.email || !contact.email.length)) {
       return false;
     }
 
@@ -183,11 +183,21 @@ ContactRenderer.prototype = {
       number: escsubs.map(function(k) {
         // Match any of the search terms with the number
         return new RegExp(k, 'ig');
+      }),
+      email: escsubs.map(function(k) {
+        return new RegExp('^' + k, 'gi');
       })
     };
 
     var include = renderPhoto ? { photoURL: true } : null;
-    var tels = contact.tel;
+    var tels = [];
+
+    if ((contact.tel && contact.tel.length)) {
+      tels = tels.concat(contact.tel);
+    }
+    if ((contact.email && contact.email.length)) {
+      tels = tels.concat(contact.email);
+    }
     var details = Utils.getContactDetails(tels[0].value, contact, include);
 
     var tempDiv = document.createElement('div');
@@ -212,14 +222,27 @@ ContactRenderer.prototype = {
 
       var data = Utils.getDisplayObject(details.title, current);
 
-      ['name', 'number'].forEach(function(key) {
-        var escapedData = Template.escape(data[key]);
-        if (shouldHighlight) {
-          escapedData = highlight(escapedData, regexps[key]);
-        }
+      if(current.value.indexOf('@') > -1) {
+        ['name', 'email'].forEach(function(key) {
+          var escapedData = Template.escape(data[key]);
+          if (shouldHighlight) {
+            escapedData = highlight(escapedData, regexps[key]);
+          }
 
-        data[key + 'HTML'] = escapedData;
-      });
+          data[key + 'HTML'] = escapedData;
+        });
+        data['numberHTML'] = data['emailHTML'];
+
+      } else {
+        ['name', 'number'].forEach(function(key) {
+          var escapedData = Template.escape(data[key]);
+          if (shouldHighlight) {
+            escapedData = highlight(escapedData, regexps[key]);
+          }
+
+          data[key + 'HTML'] = escapedData;
+        });
+      }
 
       // Render contact photo only for specific flavor
       if (renderPhoto && details.photoURL) {
