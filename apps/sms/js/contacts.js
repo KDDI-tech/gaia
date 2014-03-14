@@ -288,14 +288,20 @@
         if(isExact) {
           callback([contact]);
         } else {
-          fb.getContactByNumber(filterValue, function fbByPhone(contact) {
-            callback(contact ? [contact] : []);
-          }, function error_fbByPhone(err) {
-            if (err.name !== 'DatastoreNotFound') {
-              console.error('Error while retrieving fb by phone: ', err.name);
-            }
+          if(!Utils.isEmailAddress(filterValue)) {
+            fb.getContactByNumber(filterValue, function fbByPhone(contact) {
+              callback(contact ? [contact] : []);
+            }, function error_fbByPhone(err) {
+              if (err.name !== 'DatastoreNotFound') {
+                console.error('Error while retrieving fb by phone: ', err.name);
+              }
+              callback([]);
+            });
+          } else {
+            // TODO: Need to add inplementation of fb.getContactByAddress() 
+            // when getting FbEmailAddress will be supported.
             callback([]);
-          });
+          }
         }
       });
     }

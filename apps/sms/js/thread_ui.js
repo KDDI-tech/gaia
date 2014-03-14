@@ -1240,7 +1240,7 @@ var ThreadUI = global.ThreadUI = {
     if (thread.participants.length === 1 &&
         (contacts && contacts.length)) {
 
-      if (number.indexOf('@') > -1) {
+      if (Utils.isEmailAddress(number)) {
         address = contacts[0].email;
       } else {
         address = contacts[0].tel;
@@ -2507,7 +2507,7 @@ var ThreadUI = global.ThreadUI = {
 
     var number = this.headerText.dataset.number;
     var tel, email;
-    if (number.indexOf('@') > -1) {
+    if (Utils.isEmailAddress(number)) {
       email = number;
     } else {
       tel = number;
@@ -2552,7 +2552,7 @@ var ThreadUI = global.ThreadUI = {
         });
       }
 
-      if (number.indexOf('@') > -1) {
+      if (Utils.isEmailAddress(number)) {
         email = number;
       } else {
         tel = number;

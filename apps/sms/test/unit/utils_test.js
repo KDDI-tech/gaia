@@ -1095,3 +1095,11 @@ suite('getContactDisplayInfo', function() {
     );
   });
 });
+suite('isEmailAddress', function() {
+  test('check +348888888888', function() {
+    assert.equal(Utils.isEmailAddress('+348888888888'), false)
+  });
+  test('check a@b.com', function() {
+    assert.equal(Utils.isEmailAddress('a@b.com'), true)
+  });
+});

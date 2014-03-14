@@ -190,19 +190,19 @@ ContactRenderer.prototype = {
     };
 
     var include = renderPhoto ? { photoURL: true } : null;
-    var tels = [];
+    var addresses = [];
 
     if ((contact.tel && contact.tel.length)) {
-      tels = tels.concat(contact.tel);
+      addresses = addresses.concat(contact.tel);
     }
     if ((contact.email && contact.email.length)) {
-      tels = tels.concat(contact.email);
+      addresses = addresses.concat(contact.email);
     }
-    var details = Utils.getContactDetails(tels[0].value, contact, include);
+    var details = Utils.getContactDetails(addresses[0].value, contact, include);
 
     var tempDiv = document.createElement('div');
 
-    tels.forEach(function(current) {
+    addresses.forEach(function(current) {
       // Only render a contact's tel value entry for the _specified_
       // input value when not rendering all values. If the tel
       // record value _doesn't_ match, then continue.
@@ -222,7 +222,7 @@ ContactRenderer.prototype = {
 
       var data = Utils.getDisplayObject(details.title, current);
 
-      if(current.value.indexOf('@') > -1) {
+      if(Utils.isEmailAddress(current.value)) {
         ['name', 'email'].forEach(function(key) {
           var escapedData = Template.escape(data[key]);
           if (shouldHighlight) {

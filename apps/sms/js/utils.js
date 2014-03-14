@@ -255,7 +255,7 @@
         return false;
       }
 
-      if(a.indexOf('@') == -1 || b.indexOf('@') == -1) {
+      if(!Utils.isEmailAddress(a) || !Utils.isEmailAddress(b)) {
         if (service && service.normalize) {
           a = service.normalize(a);
           b = service.normalize(b);
@@ -263,9 +263,10 @@
           a = Utils.removeNonDialables(a);
           b = Utils.removeNonDialables(b);
         }
+        return a === b || a.slice(-7) === b.slice(-7);
       }
 
-      return a === b || a.slice(-7) === b.slice(-7);
+      return a === b;
     },
 
     /**
@@ -522,6 +523,13 @@
           window.URL.revokeObjectURL(this.src);
         };
       });
+    },
+
+    /*
+      TODO: RFC2822 check.
+    */
+    isEmailAddress: function(email) {
+      return email.indexOf('@') > -1;
     }
   };
 
