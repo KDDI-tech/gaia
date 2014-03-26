@@ -66,7 +66,30 @@ var CallScreen = {
     });
   },
 
+  isCDMA: function cs_isCDMA() {
+    var cdmaTypes = ['evdo0', 'evdoa', 'evdob', '1xrtt', 'is95a', 'is95b'];
+    var conn = window.navigator.mozMobileConnection ||
+               window.navigator.mozMobileConnections &&
+               window.navigator.mozMobileConnections[0];
+    var voiceType = conn.voice ? conn.voice.type : null;
+    if (cdmaTypes.indexOf(voiceType) !== -1) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
   updateCallsDisplay: function cs_updateCallsDisplay() {
+    if (this.isCDMA()) {
+      var call_cnt = navigator.mozTelephony.calls.length;
+      var group_cnt = navigator.mozTelephony.conferenceGroup.calls.length;
+      if (call_cnt >= 2 || group_cnt >= 2) {
+        this.callToolbar.classList.add('no-add-call');
+      }
+      else {
+        this.callToolbar.classList.remove('no-add-call');
+      }
+    }
     var enabled =
       (this.calls.querySelectorAll('section:not([hidden])').length <= 1);
     this.calls.classList.toggle('single-line', enabled);

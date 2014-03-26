@@ -28,8 +28,13 @@ var ConferenceGroupHandler = (function() {
     }
 
     LazyL10n.get(function localized(_) {
-      groupDetailsHeader.textContent = groupLabel.textContent =
-        _('group-call', {n: calls.length});
+      if (CallScreen.isCDMA()) {
+        groupDetailsHeader.textContent = groupLabel.textContent = 'Conference';
+      }
+      else {
+        groupDetailsHeader.textContent = groupLabel.textContent =
+          _('group-call', {n: calls.length});
+      }
     });
 
     // When hanging up phones on conferenceGroup.calls.length >= 2,
