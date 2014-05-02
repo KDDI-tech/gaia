@@ -1,0 +1,47 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#menu {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(128,256,0,0.2);
+  top: 0;
+  z-index: 10;
+}
+
+#as-wallpaper {
+  display: none;
+}
+
+#as-wallpaper.visible {
+  position: absolute;
+  z-index: 1;
+  display: block;
+}
+
+#as-lockscreen {
+  display: none;
+}
+
+#as-lockscreen.visible {
+  position: absolute;
+  z-index: 100;
+  display: block;
+}
+
+.conainer {
+  box-sizing: border-box;
+}
+
+.button {
+  border: outset 0.2rem #4c9900;
+  color: #4c9900;
+  width: 10rem;
+  text-align: center;
+}

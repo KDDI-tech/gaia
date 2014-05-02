@@ -1,0 +1,64 @@
+{
+  "name": "test-lockscreen-app-app",
+  "type": "certified",
+  "description": "Test Lockscreen App",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "test"
+  },
+  "permissions": {
+    "browser":{},
+    "webapps-manage":{},
+    "embed-apps":{}
+  },
+  "locales": {
+    "ar": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "de": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "el": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "en-US": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "es": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "fr": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "it": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "pt-BR": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "ru": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "tr": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    },
+    "zh-TW": {
+      "name": "test-lockscreen-app",
+      "description": "Web app template"
+    }
+  },
+  "default_locale": "en-US",
+  "icons": {
+    "128": "/style/icons/Blank.png"
+  }
+}

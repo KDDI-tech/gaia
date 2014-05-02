@@ -1,0 +1,61 @@
+{
+  "name": "as-lockscreen",
+  "type": "privileged",
+  "description": "As lockscreen",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "test"
+  },
+  "permissions": {
+  },
+  "locales": {
+    "ar": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "de": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "el": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "en-US": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "es": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "fr": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "it": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "pt-BR": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "ru": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "tr": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    },
+    "zh-TW": {
+      "name": "as-lockscreen",
+      "description": "Web app template"
+    }
+  },
+  "default_locale": "en-US",
+  "icons": {
+    "128": "/style/icons/Blank.png"
+  }
+}
