@@ -5,6 +5,12 @@ function HandledCall(aCall) {
   this._leftGroup = false;
   this.call = aCall;
 
+  var result = "";
+    
+  for (var prop in aCall) {
+    result +=  prop + " = " + aCall[prop] + "\n";
+  }
+  console.log("++DBG++:HandeldCall aCall is " + result);
   aCall.addEventListener('statechange', this);
 
   aCall.ongroupchange = (function onGroupChange() {
@@ -98,8 +104,14 @@ HandledCall.prototype.handleEvent = function hc_handle(evt) {
 };
 
 HandledCall.prototype.updateCallNumber = function hc_updateCallNumber() {
+  console.log("++DBG++:updateCallNumber comes!");
+  console.log("++DBG++:" + JSON.stringify(this.call));
+  console.log("++DBG++:numberPresentation is " + this.call.numberPresentation);
+
+  var number = this.call.number;
   var number = this.call.number;
   var secondNumber = this.call.secondNumber;
+  var numberPresentation = this.call.numberPresentation;
   var node = this.numberNode;
   var additionalInfoNode = this.additionalInfoNode;
   var self = this;
@@ -120,10 +132,61 @@ HandledCall.prototype.updateCallNumber = function hc_updateCallNumber() {
   }
 
   if (!number) {
-    LazyL10n.get(function localized(_) {
+    console.log("++DBG++:updateCallNumber null number");
+    /* TODO: KDDI will convert determing CDMA proesss to a new function */
+    var cdmaTypes = ['evdo0', 'evdoa', 'evdob', '1xrtt', 'is95a', 'is95b'];
+    var conn = window.navigator.mozMobileConnection ||
+               window.navigator.mozMobileConnections &&
+               window.navigator.mozMobileConnections[0];
+    var voiceType = conn.voice ? conn.voice.type : null;
+    var isCDMA = false;
+    if (cdmaTypes.indexOf(voiceType) !== -1) {
+      isCDMA = true;
+      console.log("++DBG++:not CDMA");
+    } else {
+      isCDMA = false;
+      console.log("++DBG++:CDMA");
+    }
+
+    if(!isCDMA){
+      LazyL10n.get(function localized(_) {
       node.textContent = _('withheld-number');
       self._cachedInfo = _('withheld-number');
-    });
+      });
+    }else{
+      /* IN CDMA, need to change the display information
+       * accorind to the numberPresentation value. */
+      switch(numberPresentation) {
+        case 'allowed':
+          console.log("++DBG++:numberPresentation is allowed");
+          LazyL10n.get(function localized(_) {
+          node.textContent = _('cdma-unset');
+          self._cachedInfo = _('cdma-unset');
+          });
+          break;
+        case 'restricted':
+          console.log("++DBG++:numberPresentation is restricted");
+          lazyl10n.get(function localized(_) {
+          node.textcontent = _('cdma-no-caller-id');
+          self._cachedinfo = _('cdma-no-caller-id');
+          });
+          break;
+        case 'payphone':
+          console.log("++DBG++:numberPresentation is payphone");
+          lazyl10n.get(function localized(_) {
+          node.textcontent = _('cdma-payphone');
+          self._cachedinfo = _('cdma-payphone');
+          });
+          break;
+        case 'unknown':
+          console.log("++DBG++:numberPresentation is unknown");
+          lazyl10n.get(function localized(_) {
+          node.textcontent = _('cdma-no-caller-id-unknown');
+          self._cachedinfo = _('cdma-no-caller-id-unknown');
+          });
+          break;
+      }
+    }
     return;
   }
 
