@@ -191,7 +191,6 @@ var CallHandler = (function callHandler() {
 
   /* === Telephony Call Ended Support === */
   function sendNotification(number, serviceId) {
-      console.log("+++DBG++:sendNotification comes!!");
     LazyLoader.load('/shared/js/dialer/utils.js', function() {
       Contacts.findByNumber(number, function lookup(contact, matchingTel) {
         LazyL10n.get(function localized(_) {
@@ -240,14 +239,6 @@ var CallHandler = (function callHandler() {
   }
 
   function callEnded(data) {
-    console.log("++DBG++:callEnded comes!!");
-    var log_temp = "";
-    
-/*    for (var prop in data) {
-        log_temp += data + "." + prop + " = " + data.prop + "\n";
-    }
-*/
-    console.log(log_temp);
     var number = data.number;
     var incoming = data.direction === 'incoming';
 

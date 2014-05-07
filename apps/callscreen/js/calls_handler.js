@@ -70,7 +70,6 @@ var CallsHandler = (function callsHandler() {
   /* === Handled calls === */
   var highPriorityWakeLock = null;
   function onCallsChanged() {
-      console.log("++DBG++:onCallsChanged comes!!");
     // Acquire or release the high-priority wake lock, as necessary.  This
     // (mostly) prevents this process from being killed while we're on a call.
     if (!highPriorityWakeLock && telephony.calls.length > 0) {
@@ -122,7 +121,6 @@ var CallsHandler = (function callsHandler() {
   }
 
   function addCall(call) {
-    console.log("++DBG++:addCall comes!!");
     // Once we already have 1 call, we need to care about incoming
     // calls and insert new dialing calls.
     if (handledCalls.length &&
@@ -235,11 +233,9 @@ var CallsHandler = (function callsHandler() {
   }
 
   function handleCallWaiting(call) {
-      console.log("++DBG++:handleCallWaiting comes!!");
     LazyL10n.get(function localized(_) {
       var number = (call.secondNumber ? call.secondNumber : call.number);
-      console.log("++DBG:call.numberPresentation is " + call.numberPresentation );
-      
+
       if (!number) {
         CallScreen.incomingNumber.textContent = _('withheld-number');
         return;

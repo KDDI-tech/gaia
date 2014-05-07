@@ -5,12 +5,14 @@ function HandledCall(aCall) {
   this._leftGroup = false;
   this.call = aCall;
 
+  /* TODO:KDDI test log */
   var result = "";
     
   for (var prop in aCall) {
     result +=  prop + " = " + aCall[prop] + "\n";
   }
   console.log("++DBG++:HandeldCall aCall is " + result);
+
   aCall.addEventListener('statechange', this);
 
   aCall.ongroupchange = (function onGroupChange() {
@@ -105,7 +107,6 @@ HandledCall.prototype.handleEvent = function hc_handle(evt) {
 
 HandledCall.prototype.updateCallNumber = function hc_updateCallNumber() {
   console.log("++DBG++:updateCallNumber comes!");
-  console.log("++DBG++:" + JSON.stringify(this.call));
   console.log("++DBG++:numberPresentation is " + this.call.numberPresentation);
 
   var number = this.call.number;
