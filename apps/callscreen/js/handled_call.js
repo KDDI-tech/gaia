@@ -143,13 +143,13 @@ HandledCall.prototype.updateCallNumber = function hc_updateCallNumber() {
     var isCDMA = false;
     if (cdmaTypes.indexOf(voiceType) !== -1) {
       isCDMA = true;
-      console.log("++DBG++:not CDMA");
+      console.log("++DBG++:CDMA");
     } else {
       isCDMA = false;
-      console.log("++DBG++:CDMA");
+      console.log("++DBG++:not CDMA");
     }
 
-    if(!isCDMA){
+    if(isCDMA === false ){
       LazyL10n.get(function localized(_) {
       node.textContent = _('withheld-number');
       self._cachedInfo = _('withheld-number');

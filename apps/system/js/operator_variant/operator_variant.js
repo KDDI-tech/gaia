@@ -37,7 +37,8 @@
     /** Operator variant helper object */
     this._operatorVariantHelper = null;
     /** MCC and MNC values */
-    this._iccSettings = { mcc: '000', mnc: '00' };
+    this._iccSettings = { mcc: '440', mnc: '10' };
+    // this._iccSettings = { mcc: '000', mnc: '00' };
   }
 
   OperatorVariantHandler.prototype = {
@@ -107,8 +108,10 @@
      */
     applySettings: function ovh_applySettings(mcc, mnc, persistKeyNotSet) {
       // Save MCC and MNC codes.
-      this._iccSettings.mcc = mcc;
-      this._iccSettings.mnc = mnc;
+      this._iccSettings.mcc = '440';
+      this._iccSettings.mnc = '10';
+      // this._iccSettings.mcc = mcc;
+      // this._iccSettings.mnc = mnc;
 
       if (!persistKeyNotSet) {
         this.retrieveOperatorVariantSettings(
